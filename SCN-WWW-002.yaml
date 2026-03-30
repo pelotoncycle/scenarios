@@ -17,10 +17,16 @@ scenario:
     - click the checkout link to proceed to checkout
     - enter a test email address in the email field and click "Continue"
     - skip the warranty option
-    - fill in shipping details (first name, last name, address, city, state, zip, phone) and click "Continue"
+    - fill in the shipping form fields (first name Test, last name User, address 123 Main St, city New York, state NY, zip 10001) but do NOT fill the phone field and do NOT click Continue yet
+    - click on the phone number field and type the exact value 5555555555 (ten digits, no dashes or spaces)
+    - click the "Continue" button to submit the shipping form
     - select the standard assembly option and click "Continue"
     - click the "Credit Card" payment option
-    - enter test card number 4242 4242 4242 4242, a future expiry date, and any CVV, then click "Review Order"
+    - wait: 5000
+    - fill: { frame: 'iframe[title="Secure card number input frame"]', selector: '[name="cardnumber"]', value: '4242424242424242' }
+    - fill: { frame: 'iframe[title="Secure expiration date input frame"]', selector: '[name="exp-date"]', value: '02/42' }
+    - fill: { frame: 'iframe[title="Secure CVC input frame"]', selector: '[name="cvc"]', value: '424' }
+    - click "Review Order"
     - click "Place Order" to complete the purchase
   acceptance_criteria:
     - the order confirmation page is displayed

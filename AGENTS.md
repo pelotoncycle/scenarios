@@ -21,12 +21,24 @@ scenario:
     - hover over "Bikes" in the top navigation bar
     - click the "Shop Bike" button in the dropdown menu that appears
     - scroll down to see the product details
+    - fill: { selector: '[data-test-id="shippingPhone"]', value: '5555555555' }
+    - fill: { frame: 'iframe[name*="privateStripeFrame"][name*="card-number"]', selector: '[name="cardnumber"]', value: '4242424242424242' }
   acceptance_criteria:
     - a product name is visible on the page
     - a price in USD is displayed
     - an Add to Cart button is visible
     - the page is not visually showing an error state or 404 page
 ```
+
+### Step types
+
+| Syntax | Behaviour |
+|---|---|
+| Plain string | AI (Stagehand) interprets the instruction and acts on the live page |
+| `fill: { selector, value }` | Direct Playwright fill — no AI, for fields the AI can't reliably access |
+| `fill: { frame, selector, value }` | Direct fill inside an iframe (e.g. Stripe payment fields) |
+| `wait: 5000` | Explicit pause in milliseconds — use when async content needs time to render |
+| `goto: /path` | Direct navigation — avoid unless content testing only |
 
 ### Writing reliable steps
 
