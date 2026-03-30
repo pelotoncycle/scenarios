@@ -6,11 +6,7 @@ Scenarios are the **holdout set** — they define expected product behavior from
 
 ## Structure
 
-```
-SCN-WWW-001.yaml   — www app scenarios
-SCN-APP-001.yaml   — native app scenarios
-...
-```
+Scenarios are named `SCN-<APP>-<NNN>.yaml` (e.g. `SCN-WWW-001.yaml`), grouped by app.
 
 ## Running scenarios
 
