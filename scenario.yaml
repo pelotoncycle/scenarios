@@ -1,0 +1,15 @@
+scenario:
+  id: SCN-POC-001
+  title: "Guest views Bike product page with correct pricing"
+  app: www
+  criticality: P0
+  steps:
+    - dismiss any country selection or cookie consent dialog if present
+    - hover over "Bike" in the top navigation bar
+    - click the "Shop Bike" button in the dropdown menu that appears
+    - scroll down past the hero image to see the product name and price
+  acceptance_criteria:
+    - a Peloton bike product name is visible on the page
+    - a price in USD is displayed
+    - an Add to Cart or similar purchase button is visible
+    - the page is not visually showing an error state or 404 page
