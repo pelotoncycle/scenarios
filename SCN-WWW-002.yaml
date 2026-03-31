@@ -14,25 +14,39 @@ scenario:
     - click the "Shop Tread" button in the dropdown menu that appears
     - click the "Add to cart" button on the Tread package page
     - click the "Review cart" button in the cart drawer that appears
-    - click the checkout link to proceed to checkout
-    - enter a test email address in the email field and click "Continue"
+    - click: '[data-test-id="checkoutLink"]'
+    - fill: { selector: '[data-test-id="checkoutEmailInput"]', value: 'test@example.com' }
+    - click: '[data-test-id="continue-checkout-button"]'
     - skip the warranty option
     - fill: { selector: '[data-test-id="shippingFirstName"]', value: 'Test' }
     - fill: { selector: '[data-test-id="shippingLastName"]', value: 'User' }
     - fill: { selector: '[data-test-id="shippingPhone"]', value: '6462468000' }
-    - fill: { selector: '[data-test-id="shippingAddress1"]', value: '123 Main St' }
-    - fill: { selector: '[data-test-id="shippingCity"]', value: 'New York' }
+    - type: { selector: '[data-test-id="shippingAddress1"]', value: '123 Main St' }  # type: not fill: — fill() fires isTrusted:false; react-geosuggest ignores it and never shows suggestions
+    - wait: 2000                                                                        # let geosuggest fetch suggestions from Places API
+    - eval: "document.querySelector('.geosuggest__item').click()"                      # click first suggestion (.geosuggest__item, NOT .pac-item which is native Places) → triggers "Confirm your address" modal
+    - wait: 1000
+    - fill: { selector: '[data-test-id="shippingCity"]', value: 'New York' }           # override Places-filled values (geosuggest auto-fills city/state/zip from the suggestion; override with desired values)
     - select: { selector: '[data-test-id="shippingState"]', value: 'NY' }
     - fill: { selector: '[data-test-id="shippingZip"]', value: '10001' }
-    - click the "Continue" button to submit the shipping form
-    - select the standard assembly option and click "Continue"
+    - wait: 500
+    - eval: "document.querySelector('[data-test-id=\"radio-origin\"]').click()"        # select "Original address entered" radio in AddressValidationModal; sets selectedAddress='origin', enabling Confirm button
+    - wait: 500
+    - click: '[data-test-id="confirmAddress"]'                                         # calls onSelected('origin') → validateAddressAndUpdateCart() → sets isValidated=true; without this, Continue silently rejects
+    - wait: 1000
+    - eval: "[...document.querySelectorAll('[data-test-id=\"continue-checkout-button\"]')].find(el => el.offsetParent !== null).click()"  # all step sections render this button; offsetParent!==null finds only the active (visible) one
+    - wait: 8000                                                                        # page transition to assembly step
+    - click: { selector: '[data-test-id="assembly-option-header"]', nth: 0 }
+    - wait: 2000
+    - click: '[data-test-id="continue-checkout-button"]'
     - wait: 3000
-    - enter "Test User" in the Cardholder name field
+    - click: '[data-test-id="creditCardOptionButton"]'
+    - wait: 5000
+    - fill: { selector: '[data-test-id="checkoutCardholder"]', value: 'Test User' }
     - enter the card number 4242424242424242 in the Card number field
     - enter 02/42 in the expiration date field
     - enter 424 in the CVC field
-    - click "Review Order"
-    - click "Place Order" to complete the purchase
+    - click: '[data-test-id="reviewOrder"]'
+    - click: '[data-test-id="placeOrder"]'
     - wait: 15000
   acceptance_criteria:
     - the order confirmation page is displayed with a "Your order is placed!" or equivalent success message
