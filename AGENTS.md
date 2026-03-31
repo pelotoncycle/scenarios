@@ -37,6 +37,7 @@ scenario:
 | Plain string | AI (Stagehand) interprets the instruction and acts on the live page |
 | `fill: { selector, value }` | Direct Playwright fill — no AI, for fields the AI can't reliably access |
 | `fill: { frame, selector, value }` | Direct fill inside an iframe (e.g. Stripe payment fields) |
+| `select: { selector, value }` | Direct `selectOption()` — for native `<select>` dropdowns |
 | `wait: 5000` | Explicit pause in milliseconds — use when async content needs time to render |
 | `goto: /path` | Direct navigation — avoid unless content testing only |
 

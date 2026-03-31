@@ -9,7 +9,7 @@ scenario:
     - test account credentials are available via environment
     - Stripe test credit card 4242 4242 4242 4242 is used for payment
   steps:
-    - dismiss any country selection or cookie consent dialog if present
+    - click: '[data-test-id="dismissModal"]'
     - hover over "Tread" in the top navigation bar
     - click the "Shop Tread" button in the dropdown menu that appears
     - click the "Add to cart" button on the Tread package page
@@ -17,19 +17,24 @@ scenario:
     - click the checkout link to proceed to checkout
     - enter a test email address in the email field and click "Continue"
     - skip the warranty option
-    - fill in the shipping form fields (first name Test, last name User, address 123 Main St, city New York, state NY, zip 10001) but do NOT fill the phone field and do NOT click Continue yet
-    - click on the phone number field and type the exact value 5555555555 (ten digits, no dashes or spaces)
+    - fill: { selector: '[data-test-id="shippingFirstName"]', value: 'Test' }
+    - fill: { selector: '[data-test-id="shippingLastName"]', value: 'User' }
+    - fill: { selector: '[data-test-id="shippingPhone"]', value: '6462468000' }
+    - fill: { selector: '[data-test-id="shippingAddress1"]', value: '123 Main St' }
+    - fill: { selector: '[data-test-id="shippingCity"]', value: 'New York' }
+    - select: { selector: '[data-test-id="shippingState"]', value: 'NY' }
+    - fill: { selector: '[data-test-id="shippingZip"]', value: '10001' }
     - click the "Continue" button to submit the shipping form
     - select the standard assembly option and click "Continue"
-    - click the "Credit Card" payment option
-    - wait: 5000
-    - fill: { frame: 'iframe[title="Secure card number input frame"]', selector: '[name="cardnumber"]', value: '4242424242424242' }
-    - fill: { frame: 'iframe[title="Secure expiration date input frame"]', selector: '[name="exp-date"]', value: '02/42' }
-    - fill: { frame: 'iframe[title="Secure CVC input frame"]', selector: '[name="cvc"]', value: '424' }
+    - wait: 3000
+    - enter "Test User" in the Cardholder name field
+    - enter the card number 4242424242424242 in the Card number field
+    - enter 02/42 in the expiration date field
+    - enter 424 in the CVC field
     - click "Review Order"
     - click "Place Order" to complete the purchase
+    - wait: 15000
   acceptance_criteria:
-    - the order confirmation page is displayed
-    - an order confirmation number or ID is visible on the page
-    - the product name "Tread" is visible in the order summary
-    - the page is not visually showing an error state or 404 page
+    - the order confirmation page is displayed with a "Your order is placed!" or equivalent success message
+    - the browser URL is on an order confirmation page containing a unique order identifier (e.g. /order-confirmation/<uuid>)
+    - the page is not visually showing a payment error, checkout error, or 404 page
